@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Merge Bubbles</title> 
+    <script src="matter.min.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKZG5X0DNS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GKZG5X0DNS');
+    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; overflow: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: white; background-color: #000; overflow: hidden; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #000000; transition: opacity 0.8s ease-out; background-size: cover; background-position: center; }
+        #splash-logo { max-height: 20vh; margin-bottom: 40px; }
+        .loader-container { width: 70%; max-width: 300px; height: 6px; background-color: #333; border-radius: 3px; overflow: hidden; }
+        .loader-bar { width: 0%; height: 100%; background-color: #ffffff; border-radius: 3px; }
+        .loader-bar.animate { animation: fill-bar 3s linear forwards; }
+        @keyframes fill-bar { from { width: 0%; } to { width: 100%; } }
+        .powered-by { position: absolute; bottom: 30px; font-size: 4vw; color: rgba(255, 255, 255, 0.75); }
+        #mode-selection-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(180deg, #4b6cb7 0%, #182848 100%); text-align: center; padding-bottom: 5vh; }
+        #mode-selection-screen h1 { font-size: 10vw; margin-bottom: 5vh; color: #ecf0f1; text-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        .modes-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5vw; }
+        .mode-card { background-color: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 20px; width: 40vw; max-width: 180px; cursor: pointer; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
+        .mode-card:hover { transform: translateY(-10px); box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); }
+        .mode-card:active { transform: translateY(-5px) scale(0.98); }
+        .mode-card img { width: 100%; border-radius: 15px; margin-bottom: 15px; background-color: rgba(0,0,0,0.2); }
+        .mode-card h3 { font-size: 5vw; font-weight: bold; color: #fff; }
+        #youtube-subscribe-link { display: flex; align-items: center; justify-content: center; margin-top: 8vh; text-decoration: none; color: rgba(255, 255, 255, 0.7); font-size: 4vw; font-weight: 500; transition: all 0.2s ease-in-out; }
+        #youtube-subscribe-link:hover { color: rgba(255, 255, 255, 1); transform: scale(1.05); }
+        #youtube-subscribe-link svg { height: 6vw; max-height: 28px; width: auto; margin-left: 10px; fill: currentColor; }
+        #privacy-policy-link { margin-top: 2vh; font-size: 3.5vw; color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: color 0.2s; }
+        #privacy-policy-link:hover { color: white; text-decoration: underline; }
+        .main-content { display: none; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; background-image: url('background.jpg'); background-size: cover; background-position: center center; }
+        #top-ui-bar { width: 95%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        #score-display, #next-block-display { background-color: rgba(0, 0, 0, 0.4); padding: 10px 22px; border-radius: 25px; font-size: 5vw; font-weight: bold; color: #ecf0f1; text-shadow: 1px 1px 3px #000; border: 1px solid rgba(255,255,255,0.1); }
+        .ui-controls { display: flex; align-items: center; gap: 10px; }
+        #next-block-display { display: flex; align-items: center; }
+        #next-block-color { width: 35px; height: 35px; margin-left: 10px; border-radius: 50%; border: 2px solid white; background-size: 90%; background-repeat: no-repeat; background-position: center; }
+        #sound-toggle-btn, #music-toggle-btn { width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.4); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); user-select: none; transition: color 0.2s ease-in-out; }
+        #music-toggle-btn svg, #sound-toggle-btn svg { width: 55%; height: 55%; fill: currentColor; }
+        .hidden { display: none; }
+        #game-container { position: relative; width: 95vw; max-width: 400px; aspect-ratio: 1 / 1; background-image: url('game-box.png'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; }
+        #menu-open-btn { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background-color: rgba(0, 0, 0, 0.4); border-radius: 50%; display: none; justify-content: center; align-items: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        #menu-open-btn svg { width: 55%; height: 55%; fill: white; }
+        #ping-display { position: fixed; top: 20px; left: 20px; font-size: 4.2vw; font-weight: bold; z-index: 100; display: none; align-items: center; }
+        #ping-display svg { width: 22px; height: 22px; margin-right: 8px; stroke-width: 2; stroke: currentColor; position: relative; top: -3px; }
+        .ping-good { color: #2ecc71; }
+        .ping-medium { color: #f39c12; }
+        .ping-bad { color: #e74c3c; }
+        #menu-slider { position: fixed; top: 0; right: 0; width: 80vw; max-width: 320px; height: 100%; background-color: rgba(20, 30, 48, 0.9); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 500; transform: translateX(100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 25px; color: #ecf0f1; border-left: 1px solid rgba(255, 255, 255, 0.1); }
+        #menu-slider.open { transform: translateX(0); }
+        #close-menu-btn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: none; border: none; color: white; font-size: 30px; cursor: pointer; line-height: 1; padding: 0; }
+        #menu-slider h2 { font-size: 8vw; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
+        .menu-item { margin-bottom: 20px; }
+        .menu-item p { font-size: 4vw; color: rgba(255, 255, 255, 0.7); margin: 0; }
+        .menu-item p strong { color: white; font-weight: 600; }
+        #menu-privacy-policy { font-size: 5vw; color: #3498db; text-decoration: none; font-weight: bold; }
+        #menu-privacy-policy:hover { text-decoration: underline; }
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 200; padding: 20px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .popup-box { background: linear-gradient(145deg, #4a5568, #2c3e50); padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); max-width: 90vw; border: 1px solid rgba(255,255,255,0.2); animation: popup-enter 0.3s ease-out; }
+        @keyframes popup-enter { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .popup-box h2 { font-size: 8vw; margin-bottom: 15px; }
+        .popup-box p { font-size: 4.5vw; line-height: 1.5; margin-bottom: 20px; }
+        .popup-button { padding: 12px 25px; font-size: 4vw; font-weight: bold; border: none; border-radius: 25px; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s; }
+        .popup-button:active { transform: scale(0.95); }
+        .popup-close-btn { position: absolute; top: 5px; right: 5px; width: 40px; height: 40px; background-color: rgba(0, 0, 0, 0.5); color: white; border: 1px solid rgba(255,255,255,0.7); border-radius: 50%; font-size: 24px; line-height: 1; }
+        #initial-connection-popup, #load-error-popup { z-index: 10001; }
+        .connection-lost-icon { width: 60px; height: 60px; margin-bottom: 15px; fill: rgba(255, 255, 255, 0.7); }
+        #initial-connection-popup h2 { font-size: 7vw; margin-bottom: 10px; color: #ecf0f1; font-weight: 600; }
+        #initial-connection-popup p { font-size: 4vw; color: rgba(255, 255, 255, 0.8); max-width: 85%; margin: 0 auto 25px auto; line-height: 1.4; }
+        #retry-connection-btn { background-color: #ecf0f1; color: #2c3e50; font-size: 5vw; padding: 15px 30px; }
+        #update-popup .changelog { margin: 20px 0; font-size: 4vw; text-align: left; border-left: 3px solid #1abc9c; padding-left: 15px; background-color: rgba(0,0,0,0.2); border-radius: 5px; max-height: 25vh; overflow-y: auto; }
+        #update-popup .button-container { display: flex; justify-content: space-around; width: 100%; margin-top: 20px; gap: 15px; }
+        #close-update-btn { background-color: #7f8c8d; color: white; } 
+        #update-now-btn { background-color: #2ecc71; color: white; } 
+        #restart-button, #retry-load-btn, #reconnect-btn { background-color: #ecf0f1; color: #2c3e50; font-size: 5vw; padding: 15px 30px; }
+        #loading-overlay { z-index: 10001; background-color: #182848; }
+        .loading-animation-container { display: flex; flex-direction: column; align-items: center; }
+        .bouncing-bubble { width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff, #a5b4fc 70%); animation: bounce 1.2s cubic-bezier(0.5, 0.05, 1, 0.5) infinite alternate; }
+        .bubble-shadow { width: 50px; height: 8px; background-color: rgba(0,0,0,0.2); border-radius: 50%; margin-top: 15px; filter: blur(2px); animation: shadow-scale 1.2s cubic-bezier(0.5, 0.05, 1, 0.5) infinite alternate; }
+        .loading-text { font-size: 5vw; color: #fff; letter-spacing: 1px; margin-top: 30px; }
+        @keyframes bounce { from { transform: translateY(-30px) scale(1); } to { transform: translateY(0) scale(1.1, 0.9); } }
+        @keyframes shadow-scale { from { transform: scale(0.7); opacity: 0.5; } to { transform: scale(1); opacity: 1; } }
+        .progress-bar-container { width: 94%; max-width: 250px; height: 10px; background-color: rgba(0, 0, 0, 0.3); border-radius: 5px; margin-top: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .progress-bar-fill { width: 0%; height: 100%; background-color: #ffffff; border-radius: 5px; transition: width 0.3s ease-in-out; }
+        #progress-text { margin-top: 10px; font-size: 4vw; }
+        #reconnect-success-message { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #2ecc71; color: white; padding: 10px 20px; border-radius: 20px; z-index: 10002; font-size: 4vw; font-weight: bold; display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        #block-gallery { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 95vw; max-width: 400px; padding: 15px; z-index: 50; display: none; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.4); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        #gallery-inner { display: flex; align-items: center; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scroll-behavior: smooth; padding: 0 15px; }
+        #gallery-inner::-webkit-scrollbar { display: none; }
+        .gallery-item { height: 60px; width: 60px; flex-shrink: 0; margin: 0 10px; border-radius: 50%; display: inline-block; vertical-align: middle; cursor: pointer; }
+        .gallery-item:active { transform: scale(0.95); }
+        #scroll-indicator { position: absolute; right: 45px; top: 50%; transform: translateY(-50%); font-size: 28px; color: rgba(255,255,255,0.7); pointer-events: none; animation: bounce-arrow 1.5s infinite; opacity: 1; transition: opacity 0.3s; }
+        @keyframes bounce-arrow { 0%, 100% { transform: translateY(-50%) translateX(0); } 50% { transform: translateY(-50%) translateX(-10px); } }
+        #block-popup { cursor: pointer; }
+        @keyframes image-pop-in { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1.1); } }
+        #popup-block-image { max-width: 50vw; max-height: 50vh; animation: image-pop-in 0.2s ease-out forwards; }
+        .button-container-gameover { display: flex; justify-content: center; gap: 15px; width: 100%; margin-top: 10px; }
+        #revive-button { background-color: #2ecc71; color: white; }
+    </style>
+</head>
+<body>
+    <div id="reconnect-success-message">Successfully Reconnected</div>
+    <div id="splash-screen"><img id="splash-logo" src="splashlogo.png" alt="Game Logo"><div class="loader-container"><div class="loader-bar"></div></div><p class="powered-by">Powered by 47 RES GAMES </p></div>
+    <div id="initial-connection-popup" class="popup-overlay"><div class="popup-box"><svg class="connection-lost-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5.5c2.3 0 4.4.8 6 2.3l-1.4 1.4C15.4 8.2 13.8 7.5 12 7.5s-3.4.7-4.6 1.7l-1.4-1.4C7.6 6.3 9.7 5.5 12 5.5zm8.1 2.3l1.4-1.4C19.6 4.6 16 3.5 12 3.5s-7.6 1.1-9.5 2.9l1.4 1.4C5.5 6.6 8.5 5.5 12 5.5s6.5 1.1 8.1 2.3zm-3.5 3.5C15.4 10.2 13.8 9.5 12 9.5s-3.4.7-4.6 1.7L6 9.9c1.8-1.8 4.3-2.9 7-2.9v2zM4.1 11.2L2.7 9.8C5.2 7.3 8.5 6 12 6v2c-2.9 0-5.6 1-7.9 2.8v.4zM21 21.9L2.1 3L.7 4.4l3.2 3.2C6.6 8 6.3 8.5 6 9l6 6 4.9 4.9L21 21.9z"/></svg><h2>Internet Required</h2><p>An internet connection is required to start the game. Please connect and try again.</p><button id="retry-connection-btn" class="popup-button">Retry</button></div></div>
+    <div id="load-error-popup" class="popup-overlay"><div class="popup-box"><p>Failed to load game assets. Please check your internet connection and try again.</p><button id="retry-load-btn" class="popup-button">Retry</button></div></div>
+    <div id="loading-overlay" class="popup-overlay"><div class="loading-animation-container"><div class="bouncing-bubble"></div><div class="bubble-shadow"></div><p class="loading-text">Loading Game...</p><div class="progress-bar-container"><div id="loading-progress-bar" class="progress-bar-fill"></div></div><p id="progress-text" class="loading-text">0%</p></div></div>
+    <div id="mode-selection-screen">
+        <h1>All Modes</h1>
+        <div class="modes-container">
+            <div class="mode-card" id="start-classic-mode"><img src="modeclassic.png" alt="Classic Mode"><h3>Classic Mode</h3></div>
+            <div class="mode-card" id="start-speed-mode"><img src="modecomingsoon.png" alt="Speed Mode"><h3>Speed Mode</h3></div>
+        </div>
+        <a id="youtube-subscribe-link" href="#" rel="noopener noreferrer"><span>Subscribe for more updates</span><svg viewBox="0 0 28 20" role="img" aria-label="YouTube Logo"><path d="M27.347 3.125s-.28-1.98-.56-2.74C26.227.425 24.9.425 24.34.345 20.357 0 14 0 14 0S7.643 0 3.66.345c-.56.08-1.887.08-2.447.96C.933 2.065.653 4.045.653 4.045S.373 5.965.373 7.885v4.23c0 1.92 0.28 3.84 0.28 3.84s0.28 1.98 0.56 2.74c0.56 0.88 1.887 0.88 2.447 0.96C7.643 20 14 20 14 20s6.357 0 10.34-.345c0.56-.08 1.887-.08 2.447-.96 0.28-0.76 0.56-2.74 0.56-2.74s0.28-1.92 0.28-3.84v-4.23c0-1.92-.28-3.84-.28-3.84zm-16.204 11.4V5.475l7.28 3.225-7.28 3.225z"></path></svg></a>
+        <a id="privacy-policy-link" href="https://google.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+    </div>
+    <div id="menu-open-btn"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17-.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12-.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></svg></div>
+    <div id="ping-display"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.556a5.5 5.5 0 017.778 0M12 20v.01m-7.071-7.071a10 10 0 0114.142 0"></path></svg><span id="ping-value">-- ms</span></div>
+    <div id="menu-slider"><button id="close-menu-btn">×</button><h2>Menu</h2><div class="menu-item"><p><strong>Version:</strong> 1.1</p></div><div class="menu-item"><p><strong>Last Updated:</strong> 25/05/2024</p></div><div class="menu-item"><a id="menu-privacy-policy" href="https://google.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a></div></div>
+    <div class="main-content">
+        <div id="top-ui-bar"></div>
+        <div id="game-container"></div>
+        <div id="block-gallery"><div id="gallery-inner"></div><div id="scroll-indicator">➔</div></div>
+    </div>
+    <div id="popups-container">
+        <div id="update-popup" class="popup-overlay"><div class="popup-box"><h2>Update Available!</h2><div id="changelog-text" class="changelog"></div><div class="button-container"><button id="close-update-btn" class="popup-button">Later</button><a id="update-now-btn" href="#" class="popup-button">Update Now</a></div></div></div>
+        <div id="game-over-screen" class="popup-overlay"><div class="popup-box"><h2 id="end-title">Game Over!</h2><p id="final-score">Your Score: 0</p><div class="button-container-gameover"><button id="restart-button" class="popup-button">Restart</button><button id="revive-button" class="popup-button">Revive (Ad)</button></div></div></div>
+        <div id="low-internet-popup" class="popup-overlay"><div class="popup-box"><p>Low internet connection. Some assets could not be loaded.</p><button id="reconnect-btn" class="popup-button">Reconnect</button></div></div>
+        <div id="promo-popup" class="popup-overlay"><div class="popup-box" style="position: relative; background: none; box-shadow: none; padding: 0; border: none;"><img id="promo-image" src="" alt="Game Promotion" style="max-width: 90vw; max-height: 70vh; border-radius: 15px;"><button id="close-promo-btn" class="popup-button popup-close-btn">×</button></div></div>
+        <div id="block-popup" class="popup-overlay"><img id="popup-block-image" src="" alt="Block Preview"></div>
+    </div>
+    <div id="audio-container" style="display: none;"><audio id="bg-music" src="background.mp3" loop preload="auto"></audio></div>
+
+    <script>
+        const GITHUB_REPO_URL = 'https://aman88282.github.io/Game-update-/';
+        const GAME_NAME = "Fuse Fellas"; const CURRENT_GAME_VERSION = 1.1;
+        const VERSION_FILE_URL = GITHUB_REPO_URL + 'version.json';
+        const YOUTUBE_CHANNEL_URL = `https://www.youtube.com/@47res95`;
+        const SPLASH_BACKGROUND_SRC = 'splashlogo.jpg';
+        const LOCAL_UI_IMAGES = ['background.jpg', 'game-box.png', 'splashlogo.jpg', 'splashlogo.png', 'modeclassic.png', 'modecomingsoon.png'];
+        const BACKGROUND_MUSIC_SRC = 'background.mp3'; const TAP_SOUND_SRC = 'soundstapsound.mp3'; const MERGE_EFFECT_SOUND_SRC = 'soundstap.mp3'; const SFX_VOLUME = 1.0; 
+        const GAME_MODES = { classic: { name: "Classic Mode", isRemote: true, gravity: 0.4, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 400, bubbleSizeMultiplier: 0.9, blockImageFiles: ['blocksblock1.png','blocksblock2.png','blocksblock3.png','blocksblock4.png','blocksblock5.png','blocksblock6.png','blocksblock7.png','blocksblock8.png','blocksblock9.png','blocksblock10.png','blocksblock11.png','blocksblock12.png','blocksblock13.png','blocksblock14.png','blocksblock15.png','blocksblock16.png'], blockSoundFiles: ['blocksblock1.mp3','blocksblock2.mp3','blocksblock3.mp3','blocksblock4.mp3','blocksblock5.mp3','blocksblock6.mp3','blocksblock7.mp3','blocksblock8.mp3','blocksblock9.mp3','blocksblock10.mp3','blocksblock11.mp3','blocksblock12.mp3','blocksblock13.mp3','blocksblock14.mp3','blocksblock15.mp3'], universalMergeSound: null, originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] }, speed: { name: "Speed Mode", isRemote: true, gravity: 0.8, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 300, bubbleSizeMultiplier: 0.9, blockImageFiles: ['locksblock1.png','locksblock2.png','locksblock3.png','locksblock4.png','locksblock5.png','locksblock6.png','locksblock7.png','locksblock8.png','locksblock9.png','locksblock10.png','locksblock11.png','locksblock12.png','locksblock13.png','locksblock14.png','locksblock15.png','locksblock16.png'], blockSoundFiles: [], universalMergeSound: 'labu.mp3', originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] } };
+        let activeGameConfig; let activeBlockImages = []; const BLOCK_DATA = (width) => activeGameConfig.originalBlockData.map(data => ({ radius: (width * data.radius * activeGameConfig.bubbleSizeMultiplier), score: data.score }));
+        const { Engine, Render, Runner, World, Bodies, Events, Composite, Body } = Matter;
+        let gameContainer, gameWidth, gameHeight, gameOverLineY;
+        let scoreDisplay, soundToggleBtn, musicToggleBtn, nextBlockColor, gameOverScreen, restartButton, initialConnectionPopup, updatePopup, closeUpdateBtn, updateNowBtn, changelogText, loadErrorPopup, lowInternetPopup, reconnectBtn, reconnectSuccessMessage, bgMusic, musicOnIcon, musicOffIcon, soundOnIcon, soundOffIcon;
+        let menuOpenBtn, menuSlider, closeMenuBtn;
+        let promoPopup, promoImage, closePromoBtn;
+        let pingDisplay, pingValue, pingInterval = null;
+        let blockGallery, blockPopup, popupBlockImage, scrollIndicator;
+        let loadedImages = {}; let isSoundOn = true; let isMusicOn = true;
+        let engine, world, render, runner;
+        let currentBlock = null, nextBlockIndex = 0;
+        let score = 0, isGameOver = false;
+        let mergeParticles = []; let gameInitialized = false;
+        let soundRequestTimeout = null; let pendingSoundIndex = -1;
+        let failedAssets = []; let isAudioUnlocked = false;
+
+        document.addEventListener('DOMContentLoaded', () => { document.title = GAME_NAME; setupGlobalElements(); });
+        function playBackgroundMusic() { if (bgMusic && isMusicOn && isAudioUnlocked) { bgMusic.volume = 0.3; bgMusic.muted = false; bgMusic.play().catch(e => console.error("BG Music play failed:", e)); } }
+        function setupGlobalElements() {
+            initialConnectionPopup = document.getElementById('initial-connection-popup'); updatePopup = document.getElementById('update-popup'); closeUpdateBtn = document.getElementById('close-update-btn');
+            updateNowBtn = document.getElementById('update-now-btn'); changelogText = document.getElementById('changelog-text'); loadErrorPopup = document.getElementById('load-error-popup');
+            lowInternetPopup = document.getElementById('low-internet-popup'); reconnectBtn = document.getElementById('reconnect-btn'); reconnectSuccessMessage = document.getElementById('reconnect-success-message');
+            bgMusic = document.getElementById('bg-music'); promoPopup = document.getElementById('promo-popup'); promoImage = document.getElementById('promo-image'); closePromoBtn = document.getElementById('close-promo-btn');
+            if(closeUpdateBtn) { closeUpdateBtn.addEventListener('click', () => { updatePopup.style.display = 'none'; }); }
+            if(closePromoBtn) { closePromoBtn.addEventListener('click', () => { promoPopup.style.display = 'none'; }); }
+            const splash = document.getElementById('splash-screen'); const loaderBar = splash.querySelector('.loader-bar'); const retryBtn = document.getElementById('retry-connection-btn');
+            async function performInitialConnectionCheck() {
+                try {
+                    await fetch(VERSION_FILE_URL + '?cachebust=' + new Date().getTime(), { method: 'HEAD', mode: 'no-cors' });
+                    initialConnectionPopup.style.display = 'none'; loaderBar.classList.add('animate');
+                    if (SPLASH_BACKGROUND_SRC && splash) { const bgImage = new Image(); bgImage.onload = () => { splash.style.backgroundImage = `url('${bgImage.src}')`; }; bgImage.src = SPLASH_BACKGROUND_SRC; }
+                    setupModeSelection();
+                    setTimeout(() => { if (splash) { splash.style.opacity = '0'; splash.addEventListener('transitionend', () => { splash.remove(); document.getElementById('mode-selection-screen').style.display = 'flex'; checkForUpdates(); }, { once: true }); } }, 3000);
+                } catch (error) { initialConnectionPopup.style.display = 'flex'; }
+            }
+            retryBtn.addEventListener('click', performInitialConnectionCheck); performInitialConnectionCheck();
+        }
+        function setupModeSelection() { 
+            document.querySelector('#start-classic-mode img').src = 'modeclassic.png'; document.querySelector('#start-speed-mode img').src = 'modecomingsoon.png';
+            const classicModeBtn = document.getElementById('start-classic-mode'); const speedModeBtn = document.getElementById('start-speed-mode');
+            const handleModeStart = (modeKey) => { console.log('Firing GA event: start_game with mode:', modeKey); gtag('event', 'start_game', { 'game_mode': modeKey }); if (!isAudioUnlocked) { bgMusic.muted = true; bgMusic.play().catch(()=>{}); isAudioUnlocked = true; } startGame(modeKey); };
+            classicModeBtn.addEventListener('click', () => handleModeStart('classic')); speedModeBtn.addEventListener('click', () => handleModeStart('speed'));
+            const subscribeLink = document.getElementById('youtube-subscribe-link');
+            if (YOUTUBE_CHANNEL_URL) { subscribeLink.addEventListener('click', (e) => { e.preventDefault(); window.open(YOUTUBE_CHANNEL_URL, '_blank'); }); } else { subscribeLink.style.display = 'none'; } 
+        }
+        async function measurePing() {
+            if (!pingDisplay || !pingValue) return; const startTime = performance.now();
+            try { await fetch(VERSION_FILE_URL + '?cachebust=' + new Date().getTime(), { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }); const endTime = performance.now(); const ping = Math.round(endTime - startTime); pingValue.textContent = `${ping} ms`; pingDisplay.className = ping < 100 ? 'ping-good' : (ping < 300 ? 'ping-medium' : 'ping-bad'); } catch (error) { pingValue.textContent = `Offline`; pingDisplay.className = 'ping-bad'; }
+        }
+        function startGame(modeKey) {
+            activeGameConfig = GAME_MODES[modeKey]; if (!activeGameConfig) { return; }
+            const baseUrl = activeGameConfig.isRemote ? GITHUB_REPO_URL : ''; activeBlockImages = activeGameConfig.blockImageFiles.map(file => baseUrl + file);
+            let audioHtml = `<audio id="sfx-tap" src="${TAP_SOUND_SRC}" preload="auto"></audio><audio id="sfx-merge-blast" src="${MERGE_EFFECT_SOUND_SRC}" preload="auto"></audio>`;
+            let essentialSounds = [TAP_SOUND_SRC, MERGE_EFFECT_SOUND_SRC, BACKGROUND_MUSIC_SRC];
+            if (activeGameConfig.universalMergeSound) { audioHtml += `<audio id="sfx-merge-universal" src="${activeGameConfig.universalMergeSound}" preload="auto"></audio>`; essentialSounds.push(activeGameConfig.universalMergeSound); } else { audioHtml += activeGameConfig.blockSoundFiles.map((soundSrc, i) => `<audio id="sfx-merge-${i}" src="${soundSrc}" preload="auto"></audio>`).join(''); essentialSounds.push(...activeGameConfig.blockSoundFiles); }
+            document.getElementById('audio-container').innerHTML += audioHtml;
+            const loadingOverlay = document.getElementById('loading-overlay'); const modeSelectionScreen = document.getElementById('mode-selection-screen'); const mainContent = document.querySelector('.main-content');
+            loadingOverlay.style.display = 'flex'; modeSelectionScreen.style.display = 'none';
+            const progressBar = document.getElementById('loading-progress-bar'); const progressText = document.getElementById('progress-text');
+            const essentialBlockImages = activeBlockImages.slice(0, 8); const totalAssets = LOCAL_UI_IMAGES.length + essentialBlockImages.length + essentialSounds.length; let loadedCount = 0;
+            function updateProgress() { loadedCount++; const percentage = totalAssets > 0 ? Math.round((loadedCount / totalAssets) * 100) : 100; progressBar.style.width = percentage + '%'; progressText.textContent = percentage + '%'; }
+            const uiImagePromises = LOCAL_UI_IMAGES.map(src => new Promise((resolve, reject) => { const img = new Image(); img.onload = () => { updateProgress(); resolve(); }; img.onerror = (e) => reject(new Error(`UI Image load failed: ${src}`)); img.src = src; }));
+            const blockImagePromises = essentialBlockImages.map((src, index) => new Promise((resolve, reject) => { const img = new Image(); img.onload = () => { loadedImages[index] = img; updateProgress(); resolve(); }; img.onerror = (e) => reject(new Error(`Block Image load failed: ${src}`)); img.src = src; }));
+            const soundPromises = essentialSounds.map(src => new Promise((resolve, reject) => { const audio = new Audio(); audio.src = src; audio.load(); audio.addEventListener('canplaythrough', () => { updateProgress(); resolve(); }, { once: true }); audio.addEventListener('error', (e) => reject(new Error(`Sound load failed: ${src}`)), { once: true });  }));
+            Promise.all([...uiImagePromises, ...blockImagePromises, ...soundPromises]).then(() => { setTimeout(() => { loadingOverlay.style.display = 'none'; mainContent.style.display = 'flex'; document.getElementById('menu-open-btn').style.display = 'flex'; document.getElementById('ping-display').style.display = 'flex'; document.getElementById('block-gallery').style.display = 'block'; initGame(); preloadRemainingAssets(); if (pingInterval) clearInterval(pingInterval); measurePing(); pingInterval = setInterval(measurePing, 3000); }, 300); }).catch(error => { console.error("Essential asset loading failed:", error.message); loadingOverlay.style.display = 'none'; mainContent.style.display = 'none'; if(loadErrorPopup) loadErrorPopup.style.display = 'flex'; 
+            
+            // --- THIS IS THE MODIFIED CODE ---
+            document.getElementById('retry-load-btn').onclick = () => {
+                location.reload(); // Reloads the entire page to ensure a clean start
+            }; 
+        });
+        }
+        function initGame() { if (gameInitialized) return; gameInitialized = true; playBackgroundMusic(); setupDOMAndStyles(); generateWaterEffect(); setupPhysics(); resetGame(); setupControls(); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !isGameOver) { verifyAndReloadAssets(); } }); }
+        function setupDOMAndStyles() { 
+            gameContainer = document.getElementById('game-container'); gameWidth = gameContainer.clientWidth; gameHeight = gameContainer.clientHeight; gameOverLineY = gameHeight * (10 / 100); 
+            const topUI = document.getElementById('top-ui-bar'); 
+            topUI.innerHTML = `<div id="score-display">Score: 0</div><div class="ui-controls"><div id="music-toggle-btn"><svg id="music-on-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55c-2.21 0-4 1.79-4 4s1.79 4 4 4s4-1.79 4-4V7h4V3h-6z"></path></svg><svg id="music-off-icon" class="hidden" viewBox="0 0 24 24"><path d="M12 7v3.55c-.59-.34-1.27-.55-2-.55c-2.21 0-4 1.79-4 4s1.79 4 4 4s4-1.79 4-4V7h4V3h-6zm-2 10c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2zm9.5-8.86L21 6.64L4.14 20.5l-1.5-1.5L21.36 2.14l1.14 1.5z"></path></svg></div><div id="sound-toggle-btn"><svg id="sound-on-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg><svg id="sound-off-icon" class="hidden" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L7 9H3v6h4l5 5v-6.73l-5-5z"></path></svg></div></div><div id="next-block-display">Next: <div id="next-block-color"></div></div>`; 
+            scoreDisplay = document.getElementById('score-display'); soundToggleBtn = document.getElementById('sound-toggle-btn'); musicToggleBtn = document.getElementById('music-toggle-btn');
+            nextBlockColor = document.getElementById('next-block-color'); gameOverScreen = document.getElementById('game-over-screen'); restartButton = document.getElementById('restart-button');
+            musicOnIcon = document.getElementById('music-on-icon'); musicOffIcon = document.getElementById('music-off-icon'); soundOnIcon = document.getElementById('sound-on-icon'); soundOffIcon = document.getElementById('sound-off-icon');
+            menuOpenBtn = document.getElementById('menu-open-btn'); menuSlider = document.getElementById('menu-slider'); closeMenuBtn = document.getElementById('close-menu-btn');
+            pingDisplay = document.getElementById('ping-display'); pingValue = document.getElementById('ping-value');
+            blockGallery = document.getElementById('block-gallery'); blockPopup = document.getElementById('block-popup'); popupBlockImage = document.getElementById('popup-block-image');
+            const galleryInner = document.getElementById('gallery-inner'); scrollIndicator = document.getElementById('scroll-indicator'); galleryInner.innerHTML = '';
+            activeBlockImages.forEach(url => { const img = document.createElement('img'); img.src = url; img.className = 'gallery-item'; galleryInner.appendChild(img); img.addEventListener('click', (e) => { e.stopPropagation(); showBlockPopup(url); }); });
+            galleryInner.addEventListener('scroll', () => {
+                if (!scrollIndicator) return;
+                const isAtEnd = galleryInner.scrollLeft + galleryInner.clientWidth >= galleryInner.scrollWidth - 5;
+                scrollIndicator.style.opacity = isAtEnd ? '0' : '1';
+            });
+        }
+        function openMenu() { if (runner && !isGameOver) Runner.stop(runner); menuSlider.classList.add('open'); }
+        function closeMenu() { if (runner && !isGameOver) Runner.start(runner, engine); menuSlider.classList.remove('open'); }
+        function showBlockPopup(imageUrl) { if(isGameOver) return; if(runner) Runner.stop(runner); popupBlockImage.src = imageUrl; blockPopup.style.display = 'flex'; }
+        function closeBlockPopup() { blockPopup.style.display = 'none'; if(runner && !isGameOver) Runner.start(runner, engine); }
+        function setupControls() { 
+            soundToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); isSoundOn = !isSoundOn; soundOnIcon.classList.toggle('hidden', !isSoundOn); soundOffIcon.classList.toggle('hidden', isSoundOn); soundToggleBtn.style.color = isSoundOn ? 'white' : 'red'; }); 
+            musicToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); isMusicOn = !isMusicOn; musicOnIcon.classList.toggle('hidden', !isMusicOn); musicOffIcon.classList.toggle('hidden', isMusicOn); musicToggleBtn.style.color = isMusicOn ? 'white' : 'red'; if (bgMusic) { bgMusic.muted = !isMusicOn; if (isMusicOn && bgMusic.paused) { bgMusic.play().catch(err => {}); } } });
+            menuOpenBtn.addEventListener('click', openMenu); closeMenuBtn.addEventListener('click', closeMenu); blockPopup.addEventListener('click', closeBlockPopup);
+            const moveHandler = (e) => { if (isGameOver || !currentBlock || !currentBlock.isStatic) return; const rect = gameContainer.getBoundingClientRect(); let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left; const radius = currentBlock.circleRadius; Body.setPosition(currentBlock, { x: Math.max(radius + (gameWidth * (7/100)), Math.min(x, gameWidth - radius - (gameWidth * (7/100)))), y: currentBlock.position.y }); }; 
+            const dropHandler = (e) => { if (isGameOver || !currentBlock) return; e.preventDefault(); const rect = gameContainer.getBoundingClientRect(); let x = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX) - rect.left; dropBlock(x); }; 
+            gameContainer.addEventListener('mousemove', moveHandler); gameContainer.addEventListener('touchmove', moveHandler, { passive: false }); gameContainer.addEventListener('mousedown', dropHandler); gameContainer.addEventListener('touchend', dropHandler); 
+            restartButton.addEventListener('click', resetGame); 
+            if(reconnectBtn) reconnectBtn.addEventListener('click', retryFailedAssets); 
+            const reviveBtn = document.getElementById('revive-button');
+            if (reviveBtn) {
+                reviveBtn.addEventListener('click', () => {
+                    if (window.Android && typeof window.Android.showRewardAd === 'function') {
+                        window.Android.showRewardAd();
+                    } else {
+                        alert("Revive feature is only available in the app.");
+                        // giveRewardToPlayer(); // For testing in browser
+                    }
+                });
+            }
+        }
+        function setupPhysics() { engine = Engine.create({ enableSleeping: false }); world = engine.world; world.gravity.y = activeGameConfig.gravity; render = Render.create({ element: gameContainer, engine: engine, options: { width: gameWidth, height: gameHeight, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio || 1 } }); Render.run(render); runner = Runner.create(); Runner.run(runner, engine); setupCustomRendering(); setupCollisionHandling(); }
+        function setupCustomRendering() { Events.on(render, 'afterRender', () => { const context = render.context; context.save(); for (const block of Composite.allBodies(world)) { if (block.label === 'block') { context.translate(block.position.x, block.position.y); context.rotate(block.angle); const radius = block.circleRadius; if (loadedImages[block.blockIndex]) { const imageSize = radius * 2 * 1; context.drawImage(loadedImages[block.blockIndex], -imageSize / 2, -imageSize / 2, imageSize, imageSize); } const effectTexture = waterEffectCache; if(effectTexture) context.drawImage(effectTexture, -radius, -radius, radius * 2, radius * 2); context.rotate(-block.angle); context.translate(-block.position.x, -block.position.y); } } for (let i = mergeParticles.length - 1; i >= 0; i--) { const p = mergeParticles[i]; p.x += p.vx; p.y += p.vy; p.lifespan--; if (p.lifespan <= 0) { mergeParticles.splice(i, 1); continue; } context.fillStyle = `rgba(255, 255, 224, ${p.lifespan / 25})`; context.fillRect(p.x, p.y, p.size, p.size); } context.restore(); }); }
+        function setupCollisionHandling() { Events.on(engine, 'collisionActive', (event) => { if (isGameOver || event.pairs.length === 0) return; const pairsToMerge = event.pairs.filter(pair => pair.bodyA.label === 'block' && pair.bodyB.label === 'block' && pair.bodyA.blockIndex === pair.bodyB.blockIndex && !pair.bodyA.isRemoving && !pair.bodyB.isRemoving ); if (pairsToMerge.length === 0) return; let hasMergedInThisFrame = false; const bodiesToRemove = new Set(); const newBlocksToCreate = []; for (const pair of pairsToMerge) { if (bodiesToRemove.has(pair.bodyA) || bodiesToRemove.has(pair.bodyB)) continue; const { bodyA, bodyB } = pair; const index = bodyA.blockIndex; if (index < activeGameConfig.originalBlockData.length - 1) { hasMergedInThisFrame = true; pendingSoundIndex = Math.max(pendingSoundIndex, index); bodiesToRemove.add(bodyA); bodiesToRemove.add(bodyB); bodyA.isRemoving = true; bodyB.isRemoving = true; const newIndex = index + 1; const newPosition = { x: (bodyA.position.x + bodyB.position.x) / 2, y: (bodyA.position.y + bodyB.position.y) / 2, }; newBlocksToCreate.push({ ...newPosition, index: newIndex }); score += activeGameConfig.originalBlockData[index].score; const newRadius = BLOCK_DATA(gameWidth)[newIndex].radius; createMergeEffect(newPosition.x, newPosition.y, newRadius); if (newIndex === activeGameConfig.originalBlockData.length - 1) triggerWin(); } } if (bodiesToRemove.size > 0) { setTimeout(() => { World.remove(world, Array.from(bodiesToRemove)); newBlocksToCreate.forEach(blockData => { const newBlock = createBlock(blockData.x, blockData.y, blockData.index); Body.setVelocity(newBlock, { x: 0, y: -2 }); World.add(world, newBlock); }); }, 0); updateScoreDisplay(); } if (hasMergedInThisFrame) { clearTimeout(soundRequestTimeout); soundRequestTimeout = setTimeout(() => { if (isSoundOn) { let blockSound; if (activeGameConfig.universalMergeSound) { blockSound = document.getElementById('sfx-merge-universal'); } else if (pendingSoundIndex !== -1) { blockSound = document.getElementById(`sfx-merge-${pendingSoundIndex}`); } if (blockSound) { blockSound.volume = SFX_VOLUME; blockSound.currentTime = 0; blockSound.play().catch(e => {}); } const blastSound = document.getElementById('sfx-merge-blast'); if (blastSound) { blastSound.volume = SFX_VOLUME; blastSound.currentTime = 0; blastSound.play().catch(e => {}); } pendingSoundIndex = -1; } }, 75); } }); setInterval(checkGameOver, 500); }
+        function createBlock(x, y, index) { const blockInfo = BLOCK_DATA(gameWidth)[index]; return Bodies.circle(x, y, blockInfo.radius, { restitution: 0.2, friction: 0.1, label: 'block', blockIndex: index, render: { visible: false } }); }
+        function resetGame() { isGameOver = false; score = 0; mergeParticles = []; updateScoreDisplay(); World.clear(world); const wallThickness = 50; const leftWallX = (gameWidth * (7 / 100)) - (wallThickness / 2); const rightWallX = gameWidth - (gameWidth * (7 / 100)) + (wallThickness / 2); const groundY = gameHeight - (gameHeight * (5.3 / 100)) + (wallThickness / 2); const ground = Bodies.rectangle(gameWidth / 2, groundY, gameWidth, wallThickness, { isStatic: true, render: { visible: false } }); const leftWall = Bodies.rectangle(leftWallX, gameHeight / 2, wallThickness, gameHeight, { isStatic: true, render: { visible: false } }); const rightWall = Bodies.rectangle(rightWallX, gameHeight / 2, wallThickness, gameHeight, { isStatic: true, render: { visible: false } }); World.add(world, [ground, leftWall, rightWall]); if(gameOverScreen) gameOverScreen.style.display = 'none'; if(runner) { Runner.start(runner, engine); } prepareNextBlock(); addCurrentBlock(); }
+        function prepareNextBlock() { nextBlockIndex = Math.floor(Math.random() * 5); const imagePath = activeBlockImages[nextBlockIndex]; nextBlockColor.style.backgroundColor = 'transparent'; nextBlockColor.style.backgroundImage = `url('${imagePath}')`; }
+        function addCurrentBlock() { if (isGameOver) return; const currentBlockIndex = nextBlockIndex; const radius = BLOCK_DATA(gameWidth)[currentBlockIndex].radius; currentBlock = createBlock(gameWidth / 2, radius + (gameHeight * activeGameConfig.spawnHeightPercent), currentBlockIndex); currentBlock.isStatic = true; World.add(world, currentBlock); prepareNextBlock(); }
+        function dropBlock(x) { if (isGameOver || !currentBlock || !currentBlock.isStatic) return; const radius = currentBlock.circleRadius; Body.setPosition(currentBlock, { x: Math.max(radius + (gameWidth * (7/100)), Math.min(x, gameWidth - radius - (gameWidth * (7/100)))), y: currentBlock.position.y }); currentBlock.isStatic = false; if (isSoundOn) { const tapSound = document.getElementById('sfx-tap'); if (tapSound) { tapSound.volume = SFX_VOLUME; tapSound.play().catch(e=>{}); } } setTimeout(() => { currentBlock = null; if (!isGameOver) addCurrentBlock(); }, activeGameConfig.nextBlockSpawnDelay); }
+        function checkGameOver() { if (isGameOver) return; for (const block of Composite.allBodies(world)) { if (block.label === 'block' && !block.isStatic && block.position.y - block.circleRadius < gameOverLineY && Math.abs(block.velocity.y) < 0.1) { triggerGameOver(); return; } } }
+        async function checkForUpdates() { try { const response = await fetch(VERSION_FILE_URL + '?cachebust=' + new Date().getTime()); if (!response.ok) return; const data = await response.json(); if (data.latest_version > CURRENT_GAME_VERSION) { if(changelogText) changelogText.innerHTML = data.changelog; if(updateNowBtn) updateNowBtn.href = data.update_url; if(updatePopup) updatePopup.style.display = 'flex'; } else if (data.promo_popup && data.promo_popup.enabled) { let promoUrl = data.promo_popup.image_url; if (promoUrl && !promoUrl.startsWith('http')) { promoUrl = GITHUB_REPO_URL + promoUrl; } if(promoImage) promoImage.src = promoUrl; if(promoPopup) promoPopup.style.display = 'flex'; } } catch (error) { console.error("Update check failed:", error); } }
+        function triggerGameOver() { if (isGameOver) return; isGameOver = true; Runner.stop(runner); clearInterval(pingInterval); pingInterval=null; gameOverScreen.querySelector('#end-title').textContent = "Game Over!"; gameOverScreen.querySelector('#final-score').textContent = `Your Score: ${score}`; gameOverScreen.style.display = 'flex'; }
+        function triggerWin() { if (isGameOver) return; isGameOver = true; Runner.stop(runner); clearInterval(pingInterval); pingInterval=null; gameOverScreen.querySelector('#end-title').textContent = "The End!"; gameOverScreen.querySelector('#final-score').textContent = `Final Score: ${score}`; gameOverScreen.style.display = 'flex'; }
+        function giveRewardToPlayer() {
+            if (!isGameOver) return;
+            const allBlocks = Composite.allBodies(world).filter(body => body.label === 'block');
+            if (allBlocks.length === 0) { resetGame(); return; }
+            let largestBlock = allBlocks[0];
+            for (let i = 1; i < allBlocks.length; i++) { if (allBlocks[i].blockIndex > largestBlock.blockIndex) { largestBlock = allBlocks[i]; } }
+            const largestBlockData = { index: largestBlock.blockIndex, x: largestBlock.position.x, y: largestBlock.position.y };
+            World.remove(world, allBlocks);
+            const newSingleBlock = createBlock(largestBlockData.x, largestBlockData.y, largestBlockData.index);
+            World.add(world, newSingleBlock);
+            isGameOver = false;
+            gameOverScreen.style.display = 'none';
+            if (runner) Runner.start(runner, engine);
+            prepareNextBlock();
+            addCurrentBlock();
+        }
+        function updateScoreDisplay() { if (scoreDisplay) scoreDisplay.textContent = `Score: ${score}`; }
+        function preloadRemainingAssets() { for (let i = 8; i < activeBlockImages.length; i++) { if (!loadedImages[i]) { loadAssetWithRetry(activeBlockImages[i], i); } } }
+        function loadAssetWithRetry(url, index, attempt = 1) { const MAX_RETRIES = 3; const RETRY_DELAY = 5000; if (loadedImages[index]) { return; } const img = new Image(); img.src = url; img.onload = () => { loadedImages[index] = img; }; img.onerror = () => { if (attempt < MAX_RETRIES) { setTimeout(() => { loadAssetWithRetry(url, index, attempt + 1); }, RETRY_DELAY); } else { if (!failedAssets.some(asset => asset.url === url)) { failedAssets.push({ url, index }); } showLowInternetPopup(); } }; }
+        function showLowInternetPopup() { if (initialConnectionPopup && initialConnectionPopup.style.display !== 'flex') { if (lowInternetPopup) lowInternetPopup.style.display = 'flex'; } }
+        function retryFailedAssets() { if (lowInternetPopup) lowInternetPopup.style.display = 'none'; if (failedAssets.length === 0) return; const promises = failedAssets.map(asset => attemptToReloadAsset(asset.url, asset.index)); Promise.allSettled(promises) .then(() => { if (failedAssets.length === 0) { showSuccessMessage(); } else { showLowInternetPopup(); } }); }
+        function attemptToReloadAsset(url, index, attempt = 1) { return new Promise((resolve) => { const MAX_RETRIES = 3; const RETRY_DELAY = 2000; const img = new Image(); img.src = url; img.onload = () => { loadedImages[index] = img; failedAssets = failedAssets.filter(asset => asset.url !== url); resolve({status: 'fulfilled'}); }; img.onerror = () => { if (attempt < MAX_RETRIES) { setTimeout(() => { attemptToReloadAsset(url, index, attempt + 1).then(resolve); }, RETRY_DELAY); } else { resolve({status: 'rejected'}); } }; }); }
+        function showSuccessMessage() { if (!reconnectSuccessMessage) return; reconnectSuccessMessage.style.display = 'block'; setTimeout(() => { reconnectSuccessMessage.style.opacity = '1'; }, 10); setTimeout(() => { reconnectSuccessMessage.style.opacity = '0'; setTimeout(() => { reconnectSuccessMessage.style.display = 'none'; }, 500); }, 5000); }
+        function verifyAndReloadAssets() { if (failedAssets.length > 0) { retryFailedAssets(); } else { for (let i = 0; i < activeBlockImages.length; i++) { if (!loadedImages[i]) { loadAssetWithRetry(activeBlockImages[i], i); } } } if (runner && !isGameOver) { Runner.start(runner, engine); } }
+        function generateWaterEffect() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const radius = 128; canvas.width = canvas.height = radius * 2; const highlightGradient = ctx.createRadialGradient(radius * 0.7, radius * 0.7, 0, radius * 0.7, radius * 0.7, radius * 0.6); highlightGradient.addColorStop(0, `rgba(255, 255, 255, 0.3)`); highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)'); ctx.fillStyle = highlightGradient; ctx.fillRect(0, 0, radius * 2, radius * 2); ctx.strokeStyle = `rgba(255, 255, 255, 0.4)`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(radius, radius, radius - 1, 0, 2 * Math.PI); ctx.stroke(); waterEffectCache = canvas; }
+        function createMergeEffect(x, y, radius) { const particleCount = 12, baseSpeed = radius * 0.07; for (let i = 0; i < particleCount; i++) { const angle = Math.random() * Math.PI * 2, speed = Math.random() * baseSpeed + baseSpeed * 0.5; mergeParticles.push({ x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, size: Math.random() * 3 + 2, lifespan: 25 }); } }
+    </script>
+</body>
+</html>
