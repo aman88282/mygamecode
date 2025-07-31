@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Merge Bubbles</title> 
-    <script src="matter.min.js"></script>
+    
+    <!-- Matter.js अब आपके GitHub रिपॉजिटरी से लोड हो रहा है -->
+    <script src="https://aman88282.github.io/Game-update-/matter.min.js"></script>
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKZG5X0DNS"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -107,15 +110,17 @@
 </head>
 <body>
     <div id="reconnect-success-message">Successfully Reconnected</div>
-    <div id="splash-screen"><img id="splash-logo" src="splashlogo.png" alt="Game Logo"><div class="loader-container"><div class="loader-bar"></div></div><p class="powered-by">Powered by 47 RES GAMES </p></div>
+    <!-- Note: The `src` for the splash logo is set dynamically by JavaScript -->
+    <div id="splash-screen"><img id="splash-logo" src="" alt="Game Logo"><div class="loader-container"><div class="loader-bar"></div></div><p class="powered-by">Powered by 47 RES GAMES </p></div>
     <div id="initial-connection-popup" class="popup-overlay"><div class="popup-box"><svg class="connection-lost-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5.5c2.3 0 4.4.8 6 2.3l-1.4 1.4C15.4 8.2 13.8 7.5 12 7.5s-3.4.7-4.6 1.7l-1.4-1.4C7.6 6.3 9.7 5.5 12 5.5zm8.1 2.3l1.4-1.4C19.6 4.6 16 3.5 12 3.5s-7.6 1.1-9.5 2.9l1.4 1.4C5.5 6.6 8.5 5.5 12 5.5s6.5 1.1 8.1 2.3zm-3.5 3.5C15.4 10.2 13.8 9.5 12 9.5s-3.4.7-4.6 1.7L6 9.9c1.8-1.8 4.3-2.9 7-2.9v2zM4.1 11.2L2.7 9.8C5.2 7.3 8.5 6 12 6v2c-2.9 0-5.6 1-7.9 2.8v.4zM21 21.9L2.1 3L.7 4.4l3.2 3.2C6.6 8 6.3 8.5 6 9l6 6 4.9 4.9L21 21.9z"/></svg><h2>Internet Required</h2><p>An internet connection is required to start the game. Please connect and try again.</p><button id="retry-connection-btn" class="popup-button">Retry</button></div></div>
     <div id="load-error-popup" class="popup-overlay"><div class="popup-box"><p>Failed to load game assets. Please check your internet connection and try again.</p><button id="retry-load-btn" class="popup-button">Retry</button></div></div>
     <div id="loading-overlay" class="popup-overlay"><div class="loading-animation-container"><div class="bouncing-bubble"></div><div class="bubble-shadow"></div><p class="loading-text">Loading Game...</p><div class="progress-bar-container"><div id="loading-progress-bar" class="progress-bar-fill"></div></div><p id="progress-text" class="loading-text">0%</p></div></div>
     <div id="mode-selection-screen">
         <h1>All Modes</h1>
         <div class="modes-container">
-            <div class="mode-card" id="start-classic-mode"><img src="modeclassic.png" alt="Classic Mode"><h3>Classic Mode</h3></div>
-            <div class="mode-card" id="start-speed-mode"><img src="modecomingsoon.png" alt="Speed Mode"><h3>Speed Mode</h3></div>
+            <!-- Note: The `src` for mode images is set dynamically by JavaScript -->
+            <div class="mode-card" id="start-classic-mode"><img src="" alt="Classic Mode"><h3>Classic Mode</h3></div>
+            <div class="mode-card" id="start-speed-mode"><img src="" alt="Speed Mode"><h3>Speed Mode</h3></div>
         </div>
         <a id="youtube-subscribe-link" href="#" rel="noopener noreferrer"><span>Subscribe for more updates</span><svg viewBox="0 0 28 20" role="img" aria-label="YouTube Logo"><path d="M27.347 3.125s-.28-1.98-.56-2.74C26.227.425 24.9.425 24.34.345 20.357 0 14 0 14 0S7.643 0 3.66.345c-.56.08-1.887.08-2.447.96C.933 2.065.653 4.045.653 4.045S.373 5.965.373 7.885v4.23c0 1.92 0.28 3.84 0.28 3.84s0.28 1.98 0.56 2.74c0.56 0.88 1.887 0.88 2.447 0.96C7.643 20 14 20 14 20s6.357 0 10.34-.345c0.56-.08 1.887-.08 2.447-.96 0.28-0.76 0.56-2.74 0.56-2.74s0.28-1.92 0.28-3.84v-4.23c0-1.92-.28-3.84-.28-3.84zm-16.204 11.4V5.475l7.28 3.225-7.28 3.225z"></path></svg></a>
         <a id="privacy-policy-link" href="https://google.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
@@ -135,17 +140,43 @@
         <div id="promo-popup" class="popup-overlay"><div class="popup-box" style="position: relative; background: none; box-shadow: none; padding: 0; border: none;"><img id="promo-image" src="" alt="Game Promotion" style="max-width: 90vw; max-height: 70vh; border-radius: 15px;"><button id="close-promo-btn" class="popup-button popup-close-btn">×</button></div></div>
         <div id="block-popup" class="popup-overlay"><img id="popup-block-image" src="" alt="Block Preview"></div>
     </div>
-    <div id="audio-container" style="display: none;"><audio id="bg-music" src="background.mp3" loop preload="auto"></audio></div>
+    <div id="audio-container" style="display: none;"><audio id="bg-music" src="" loop preload="auto"></audio></div>
 
     <script>
         const GITHUB_REPO_URL = 'https://aman88282.github.io/Game-update-/';
         const GAME_NAME = "Fuse Fellas"; const CURRENT_GAME_VERSION = 1.1;
         const VERSION_FILE_URL = GITHUB_REPO_URL + 'version.json';
         const YOUTUBE_CHANNEL_URL = `https://www.youtube.com/@47res95`;
-        const SPLASH_BACKGROUND_SRC = 'splashlogo.jpg';
-        const LOCAL_UI_IMAGES = ['background.jpg', 'game-box.png', 'splashlogo.jpg', 'splashlogo.png', 'modeclassic.png', 'modecomingsoon.png'];
-        const BACKGROUND_MUSIC_SRC = 'background.mp3'; const TAP_SOUND_SRC = 'soundstapsound.mp3'; const MERGE_EFFECT_SOUND_SRC = 'soundstap.mp3'; const SFX_VOLUME = 1.0; 
-        const GAME_MODES = { classic: { name: "Classic Mode", isRemote: true, gravity: 0.4, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 400, bubbleSizeMultiplier: 0.9, blockImageFiles: ['blocksblock1.png','blocksblock2.png','blocksblock3.png','blocksblock4.png','blocksblock5.png','blocksblock6.png','blocksblock7.png','blocksblock8.png','blocksblock9.png','blocksblock10.png','blocksblock11.png','blocksblock12.png','blocksblock13.png','blocksblock14.png','blocksblock15.png','blocksblock16.png'], blockSoundFiles: ['blocksblock1.mp3','blocksblock2.mp3','blocksblock3.mp3','blocksblock4.mp3','blocksblock5.mp3','blocksblock6.mp3','blocksblock7.mp3','blocksblock8.mp3','blocksblock9.mp3','blocksblock10.mp3','blocksblock11.mp3','blocksblock12.mp3','blocksblock13.mp3','blocksblock14.mp3','blocksblock15.mp3'], universalMergeSound: null, originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] }, speed: { name: "Speed Mode", isRemote: true, gravity: 0.8, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 300, bubbleSizeMultiplier: 0.9, blockImageFiles: ['locksblock1.png','locksblock2.png','locksblock3.png','locksblock4.png','locksblock5.png','locksblock6.png','locksblock7.png','locksblock8.png','locksblock9.png','locksblock10.png','locksblock11.png','locksblock12.png','locksblock13.png','locksblock14.png','locksblock15.png','locksblock16.png'], blockSoundFiles: [], universalMergeSound: 'labu.mp3', originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] } };
+
+        // All local assets are now loaded from GitHub
+        const SPLASH_BACKGROUND_SRC = GITHUB_REPO_URL + 'splashlogo.jpg';
+        const LOCAL_UI_IMAGES = [
+            'background.jpg', 'game-box.png', 'splashlogo.jpg',
+            'splashlogo.png', 'modeclassic.png', 'modecomingsoon.png'
+        ].map(img => GITHUB_REPO_URL + img);
+
+        const BACKGROUND_MUSIC_SRC = GITHUB_REPO_URL + 'background.mp3'; 
+        const TAP_SOUND_SRC = GITHUB_REPO_URL + 'soundstapsound.mp3'; 
+        const MERGE_EFFECT_SOUND_SRC = GITHUB_REPO_URL + 'soundstap.mp3'; 
+        const SFX_VOLUME = 1.0; 
+        
+        const GAME_MODES = { 
+            classic: { 
+                name: "Classic Mode", isRemote: true, gravity: 0.4, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 400, bubbleSizeMultiplier: 0.9, 
+                blockImageFiles: ['blocksblock1.png','blocksblock2.png','blocksblock3.png','blocksblock4.png','blocksblock5.png','blocksblock6.png','blocksblock7.png','blocksblock8.png','blocksblock9.png','blocksblock10.png','blocksblock11.png','blocksblock12.png','blocksblock13.png','blocksblock14.png','blocksblock15.png','blocksblock16.png'], 
+                blockSoundFiles: ['blocksblock1.mp3','blocksblock2.mp3','blocksblock3.mp3','blocksblock4.mp3','blocksblock5.mp3','blocksblock6.mp3','blocksblock7.mp3','blocksblock8.mp3','blocksblock9.mp3','blocksblock10.mp3','blocksblock11.mp3','blocksblock12.mp3','blocksblock13.mp3','blocksblock14.mp3','blocksblock15.mp3'], 
+                universalMergeSound: null, 
+                originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] 
+            }, 
+            speed: { 
+                name: "Speed Mode", isRemote: true, gravity: 0.8, spawnHeightPercent: 0.0180, nextBlockSpawnDelay: 300, bubbleSizeMultiplier: 0.9, 
+                blockImageFiles: ['locksblock1.png','locksblock2.png','locksblock3.png','locksblock4.png','locksblock5.png','locksblock6.png','locksblock7.png','locksblock8.png','locksblock9.png','locksblock10.png','locksblock11.png','locksblock12.png','locksblock13.png','locksblock14.png','locksblock15.png','locksblock16.png'], 
+                blockSoundFiles: [], 
+                universalMergeSound: GITHUB_REPO_URL + 'labu.mp3', // Updated path
+                originalBlockData: [ { radius: 0.055, score: 1 }, { radius: 0.060, score: 3 }, { radius: 0.070, score: 6 }, { radius: 0.075, score: 10 }, { radius: 0.083, score: 15 }, { radius: 0.085, score: 21 }, { radius: 0.095, score: 28 }, { radius: 0.105, score: 36 }, { radius: 0.115, score: 45 }, { radius: 0.125, score: 55 }, { radius: 0.135, score: 66 }, { radius: 0.145, score: 78 }, { radius: 0.160, score: 91 }, { radius: 0.175, score: 105 }, { radius: 0.190, score: 120 }, { radius: 0.220, score: 200 } ] 
+            } 
+        };
+
         let activeGameConfig; let activeBlockImages = []; const BLOCK_DATA = (width) => activeGameConfig.originalBlockData.map(data => ({ radius: (width * data.radius * activeGameConfig.bubbleSizeMultiplier), score: data.score }));
         const { Engine, Render, Runner, World, Bodies, Events, Composite, Body } = Matter;
         let gameContainer, gameWidth, gameHeight, gameOverLineY;
@@ -164,7 +195,11 @@
 
         document.addEventListener('DOMContentLoaded', () => { document.title = GAME_NAME; setupGlobalElements(); });
         function playBackgroundMusic() { if (bgMusic && isMusicOn && isAudioUnlocked) { bgMusic.volume = 0.3; bgMusic.muted = false; bgMusic.play().catch(e => console.error("BG Music play failed:", e)); } }
+        
         function setupGlobalElements() {
+            document.getElementById('splash-logo').src = GITHUB_REPO_URL + 'splashlogo.png';
+            document.getElementById('bg-music').src = BACKGROUND_MUSIC_SRC;
+
             initialConnectionPopup = document.getElementById('initial-connection-popup'); updatePopup = document.getElementById('update-popup'); closeUpdateBtn = document.getElementById('close-update-btn');
             updateNowBtn = document.getElementById('update-now-btn'); changelogText = document.getElementById('changelog-text'); loadErrorPopup = document.getElementById('load-error-popup');
             lowInternetPopup = document.getElementById('low-internet-popup'); reconnectBtn = document.getElementById('reconnect-btn'); reconnectSuccessMessage = document.getElementById('reconnect-success-message');
@@ -183,40 +218,57 @@
             }
             retryBtn.addEventListener('click', performInitialConnectionCheck); performInitialConnectionCheck();
         }
+        
         function setupModeSelection() { 
-            document.querySelector('#start-classic-mode img').src = 'modeclassic.png'; document.querySelector('#start-speed-mode img').src = 'modecomingsoon.png';
+            document.querySelector('#start-classic-mode img').src = GITHUB_REPO_URL + 'modeclassic.png'; 
+            document.querySelector('#start-speed-mode img').src = GITHUB_REPO_URL + 'modecomingsoon.png';
+            
             const classicModeBtn = document.getElementById('start-classic-mode'); const speedModeBtn = document.getElementById('start-speed-mode');
             const handleModeStart = (modeKey) => { console.log('Firing GA event: start_game with mode:', modeKey); gtag('event', 'start_game', { 'game_mode': modeKey }); if (!isAudioUnlocked) { bgMusic.muted = true; bgMusic.play().catch(()=>{}); isAudioUnlocked = true; } startGame(modeKey); };
             classicModeBtn.addEventListener('click', () => handleModeStart('classic')); speedModeBtn.addEventListener('click', () => handleModeStart('speed'));
             const subscribeLink = document.getElementById('youtube-subscribe-link');
             if (YOUTUBE_CHANNEL_URL) { subscribeLink.addEventListener('click', (e) => { e.preventDefault(); window.open(YOUTUBE_CHANNEL_URL, '_blank'); }); } else { subscribeLink.style.display = 'none'; } 
         }
+
         async function measurePing() {
             if (!pingDisplay || !pingValue) return; const startTime = performance.now();
             try { await fetch(VERSION_FILE_URL + '?cachebust=' + new Date().getTime(), { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }); const endTime = performance.now(); const ping = Math.round(endTime - startTime); pingValue.textContent = `${ping} ms`; pingDisplay.className = ping < 100 ? 'ping-good' : (ping < 300 ? 'ping-medium' : 'ping-bad'); } catch (error) { pingValue.textContent = `Offline`; pingDisplay.className = 'ping-bad'; }
         }
+        
         function startGame(modeKey) {
             activeGameConfig = GAME_MODES[modeKey]; if (!activeGameConfig) { return; }
-            const baseUrl = activeGameConfig.isRemote ? GITHUB_REPO_URL : ''; activeBlockImages = activeGameConfig.blockImageFiles.map(file => baseUrl + file);
+            const baseUrl = activeGameConfig.isRemote ? GITHUB_REPO_URL : ''; 
+            activeBlockImages = activeGameConfig.blockImageFiles.map(file => baseUrl + file);
+            
             let audioHtml = `<audio id="sfx-tap" src="${TAP_SOUND_SRC}" preload="auto"></audio><audio id="sfx-merge-blast" src="${MERGE_EFFECT_SOUND_SRC}" preload="auto"></audio>`;
             let essentialSounds = [TAP_SOUND_SRC, MERGE_EFFECT_SOUND_SRC, BACKGROUND_MUSIC_SRC];
-            if (activeGameConfig.universalMergeSound) { audioHtml += `<audio id="sfx-merge-universal" src="${activeGameConfig.universalMergeSound}" preload="auto"></audio>`; essentialSounds.push(activeGameConfig.universalMergeSound); } else { audioHtml += activeGameConfig.blockSoundFiles.map((soundSrc, i) => `<audio id="sfx-merge-${i}" src="${soundSrc}" preload="auto"></audio>`).join(''); essentialSounds.push(...activeGameConfig.blockSoundFiles); }
+            
+            if (activeGameConfig.universalMergeSound) { 
+                audioHtml += `<audio id="sfx-merge-universal" src="${activeGameConfig.universalMergeSound}" preload="auto"></audio>`; 
+                essentialSounds.push(activeGameConfig.universalMergeSound); 
+            } else { 
+                const modeSoundFiles = activeGameConfig.blockSoundFiles.map(src => baseUrl + src);
+                audioHtml += modeSoundFiles.map((soundSrc, i) => `<audio id="sfx-merge-${i}" src="${soundSrc}" preload="auto"></audio>`).join(''); 
+                essentialSounds.push(...modeSoundFiles); 
+            }
             document.getElementById('audio-container').innerHTML += audioHtml;
+
             const loadingOverlay = document.getElementById('loading-overlay'); const modeSelectionScreen = document.getElementById('mode-selection-screen'); const mainContent = document.querySelector('.main-content');
             loadingOverlay.style.display = 'flex'; modeSelectionScreen.style.display = 'none';
             const progressBar = document.getElementById('loading-progress-bar'); const progressText = document.getElementById('progress-text');
-            const essentialBlockImages = activeBlockImages.slice(0, 8); const totalAssets = LOCAL_UI_IMAGES.length + essentialBlockImages.length + essentialSounds.length; let loadedCount = 0;
+            
+            const essentialBlockImages = activeBlockImages.slice(0, 8); 
+            const totalAssets = LOCAL_UI_IMAGES.length + essentialBlockImages.length + essentialSounds.length; let loadedCount = 0;
+            
             function updateProgress() { loadedCount++; const percentage = totalAssets > 0 ? Math.round((loadedCount / totalAssets) * 100) : 100; progressBar.style.width = percentage + '%'; progressText.textContent = percentage + '%'; }
+            
             const uiImagePromises = LOCAL_UI_IMAGES.map(src => new Promise((resolve, reject) => { const img = new Image(); img.onload = () => { updateProgress(); resolve(); }; img.onerror = (e) => reject(new Error(`UI Image load failed: ${src}`)); img.src = src; }));
             const blockImagePromises = essentialBlockImages.map((src, index) => new Promise((resolve, reject) => { const img = new Image(); img.onload = () => { loadedImages[index] = img; updateProgress(); resolve(); }; img.onerror = (e) => reject(new Error(`Block Image load failed: ${src}`)); img.src = src; }));
             const soundPromises = essentialSounds.map(src => new Promise((resolve, reject) => { const audio = new Audio(); audio.src = src; audio.load(); audio.addEventListener('canplaythrough', () => { updateProgress(); resolve(); }, { once: true }); audio.addEventListener('error', (e) => reject(new Error(`Sound load failed: ${src}`)), { once: true });  }));
-            Promise.all([...uiImagePromises, ...blockImagePromises, ...soundPromises]).then(() => { setTimeout(() => { loadingOverlay.style.display = 'none'; mainContent.style.display = 'flex'; document.getElementById('menu-open-btn').style.display = 'flex'; document.getElementById('ping-display').style.display = 'flex'; document.getElementById('block-gallery').style.display = 'block'; initGame(); preloadRemainingAssets(); if (pingInterval) clearInterval(pingInterval); measurePing(); pingInterval = setInterval(measurePing, 3000); }, 300); }).catch(error => { console.error("Essential asset loading failed:", error.message); loadingOverlay.style.display = 'none'; mainContent.style.display = 'none'; if(loadErrorPopup) loadErrorPopup.style.display = 'flex'; 
             
-            // --- THIS IS THE MODIFIED CODE ---
-            document.getElementById('retry-load-btn').onclick = () => {
-                location.reload(); // Reloads the entire page to ensure a clean start
-            }; 
-        });
+            Promise.all([...uiImagePromises, ...blockImagePromises, ...soundPromises]).then(() => { setTimeout(() => { loadingOverlay.style.display = 'none'; mainContent.style.display = 'flex'; document.getElementById('menu-open-btn').style.display = 'flex'; document.getElementById('ping-display').style.display = 'flex'; document.getElementById('block-gallery').style.display = 'block'; initGame(); preloadRemainingAssets(); if (pingInterval) clearInterval(pingInterval); measurePing(); pingInterval = setInterval(measurePing, 3000); }, 300); }).catch(error => { console.error("Essential asset loading failed:", error.message); loadingOverlay.style.display = 'none'; mainContent.style.display = 'none'; if(loadErrorPopup) loadErrorPopup.style.display = 'flex'; 
+            document.getElementById('retry-load-btn').onclick = () => { location.reload(); }; 
+            });
         }
         function initGame() { if (gameInitialized) return; gameInitialized = true; playBackgroundMusic(); setupDOMAndStyles(); generateWaterEffect(); setupPhysics(); resetGame(); setupControls(); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !isGameOver) { verifyAndReloadAssets(); } }); }
         function setupDOMAndStyles() { 
@@ -257,7 +309,6 @@
                         window.Android.showRewardAd();
                     } else {
                         alert("Revive feature is only available in the app.");
-                        // giveRewardToPlayer(); // For testing in browser
                     }
                 });
             }
